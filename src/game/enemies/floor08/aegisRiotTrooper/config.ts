@@ -1,0 +1,31 @@
+import type { EnemyArchetypeConfig } from '../../core/types';
+
+export const AEGIS_RIOT_CONFIG: EnemyArchetypeConfig = {
+  id: 'aegis_riot_trooper',
+  displayName: 'AEGIS-RIOT',
+  roleSubtitle: 'HEAVY EXOSUIT SHIELD JUGGERNAUT',
+  tier: 'normal',
+  maxHp: 420,
+  moveSpeed: 2.45,
+  sprintSpeed: 3.3,
+  collisionRadius: 0.48,
+  height: 1.96,
+  preferredMinRange: 4.4,
+  preferredMaxRange: 11.0,
+  detectRange: 26,
+  scoreValue: 290,
+  startsWithShield: true,
+  weakpointIntel: 'SHATTER THE GLOWING CYAN SHIELD PROJECTOR LENS TO BREAK THE HARD-LIGHT BARRIER',
+  weakpoint: {
+    id: 'shield_projector_lens',
+    label: 'Shield Projector Lens',
+    damageMultiplier: 1.95,
+    breakThreshold: 84,
+    breakBonusDamage: 75,
+    staggerDuration: 2.75,
+    requiresExposedWindow: false,
+    repeatable: false,
+    repeatCooldown: 0,
+    breaksShield: true,
+  },
+};

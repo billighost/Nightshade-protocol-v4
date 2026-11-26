@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Remix Remix Remix Remix Nightshade Protocol",
+  "description": "A 3D cyberpunk spy-base tactical action game built with Three.js and WebGL featuring an articulated covert operative, Mixamo FBX support, and dual weapons with skill-based reload mechanics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #080b10;
+    color: #f1f5f9;
+    font-family: var(--font-sans);
+    overflow: hidden;
+  }
+}
+
+.hud-numeral {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.92);
+}
+
+.hud-panel {
+  background: rgba(9, 14, 22, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.52);
+}
+
+.hud-panel-accent {
+  background: rgba(9, 14, 22, 0.92);
+  border: 1px solid rgba(34, 211, 238, 0.45);
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.14), 0 12px 28px rgba(0, 0, 0, 0.56);
+}
+
+.hud-chamfer {
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
+}
+
+@keyframes hudRechargeSweep {
+  0% {
+    transform: translateX(-140%);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.78;
+  }
+  75% {
+    opacity: 0.78;
+  }
+  100% {
+    transform: translateX(340%);
+    opacity: 0;
+  }
+}
+
+.hud-recharge-sweep {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(186, 230, 253, 0.85) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: hudRechargeSweep 1.15s linear infinite;
+}
+
+@keyframes hudBeaconPulse {
+  0% {
+    transform: rotate(45deg) scale(0.92);
+    opacity: 0.92;
+  }
+  100% {
+    transform: rotate(45deg) scale(2.15);
+    opacity: 0;
+  }
+}
+
+.hud-beacon-pulse {
+  animation: hudBeaconPulse 1.55s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+
+@keyframes hudClearedReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hud-cleared-reveal {
+  animation: hudClearedReveal 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes hudRuleExpand {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+.hud-rule-expand {
+  animation: hudRuleExpand 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+

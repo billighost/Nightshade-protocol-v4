@@ -1,0 +1,31 @@
+import type { EnemyArchetypeConfig } from '../../core/types';
+
+export const COMMANDER_KESTREL_CONFIG: EnemyArchetypeConfig = {
+  id: 'commander_kestrel',
+  displayName: 'COMMANDER KESTREL-08',
+  roleSubtitle: 'FLOOR 08 MAIN-HALL BOSS · VALKYRIE AERO-STRIKE COMMANDER',
+  tier: 'boss',
+  maxHp: 2250,
+  moveSpeed: 4.35,
+  sprintSpeed: 7.25,
+  collisionRadius: 0.52,
+  height: 2.2,
+  preferredMinRange: 5.5,
+  preferredMaxRange: 14.5,
+  detectRange: 44,
+  scoreValue: 2500,
+  phase2ThresholdRatio: 0.55,
+  weakpointIntel: 'AFTER HIS JET-BLADE OR METEOR SLAM, SHOOT THE BLAZING GOLD JUMP-PACK THERMAL VENTS',
+  phase2Intel: 'OVERDRIVE: JUMP OR ROLL OVER HIS GOLDEN SHOCKWAVE RING, THEN SHATTER THE OPEN JET VENTS',
+  weakpoint: {
+    id: 'jetpack_thermal_vents',
+    label: 'Jump-Pack Thermal Vents',
+    damageMultiplier: 2.2,
+    breakThreshold: 150,
+    breakBonusDamage: 220,
+    staggerDuration: 3.3,
+    requiresExposedWindow: true,
+    repeatable: true,
+    repeatCooldown: 6.2,
+  },
+};
