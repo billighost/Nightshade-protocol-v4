@@ -28,6 +28,7 @@ export interface EnemyArchetypeBrain {
   readonly config: EnemyArchetypeConfig;
   createRig: (enemyId: string) => EnemyRigHandle;
   createAiState: () => Record<string, unknown>;
+  onShieldBlock?: (aiState: Record<string, unknown>, rawDamage: number) => void;
   stepAi: (ctx: EnemyAiStepContext) => void;
 }
 
@@ -260,6 +261,7 @@ export class EnemyManager {
     }
 
     const result = resolveEnemyHit(enemy.state, enemy.config, rawDamage, hitZone, flinchDirX);
+    if (result.blockedByShield) enemy.brain.onShieldBlock?.(enemy.aiState, rawDamage);
 
     if (result.shieldShattered && enemy.rig.shieldGroup) {
       enemy.rig.shieldGroup.visible = false;

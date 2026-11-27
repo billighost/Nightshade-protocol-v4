@@ -17,12 +17,13 @@ export const SHIELD_CHARIOT_BRUTE_CONFIG: EnemyArchetypeConfig = {
   startsWithShield: true,
   phase2ThresholdRatio: 0.55,
   weakpointIntel:
-    'Bait the Brute’s Chariot Bull-Rush or Prow Slam and shred his exposed DORSAL FURNACE REACTOR to shatter his V-Prow Shield!',
+    'Sidestep the bull-rush. While the Brute brakes, shoot the orange furnace on his back to shatter the prow shield.',
+  phase2Intel: 'Furnace overdrive widens his flak fan and adds a third mortar. Move out of the landing rings.',
   weakpoint: {
     id: 'dorsal_booster',
     label: 'DORSAL FURNACE REACTOR',
     damageMultiplier: 2.25,
-    breakThreshold: 84,
+    breakThreshold: 80,
     breakBonusDamage: 88,
     staggerDuration: 2.6,
     requiresExposedWindow: false,

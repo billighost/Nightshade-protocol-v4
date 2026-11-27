@@ -1,13 +1,10 @@
-export type BruteAction =
-  | 'advance'
-  | 'strafe_pressure'
-  | 'ram_shield_bash'
-  | 'seismic_prow_slam'
-  | 'chariot_bull_rush'
-  | 'flak_scatter_barrage'
-  | 'incendiary_mortar_salvo'
-  | 'juggernaut_spin_cleave'
-  | 'fortress_advance_barrage';
+// Order also identifies the seven clips in the Floor 05 pose inspector.
+export const BRUTE_ATTACKS = [
+  'ram_shield_bash', 'seismic_prow_slam', 'chariot_bull_rush', 'flak_scatter_barrage',
+  'incendiary_mortar_salvo', 'juggernaut_spin_cleave', 'fortress_advance_barrage',
+] as const;
+export type BruteAttack = (typeof BRUTE_ATTACKS)[number];
+export type BruteAction = 'advance' | 'strafe_pressure' | BruteAttack;
 
 export interface BruteTacticsInput {
   horizDist: number;
@@ -41,7 +38,7 @@ export function selectBruteAction(input: BruteTacticsInput): BruteAction {
 
   // 1. Reactive Fortress Advance Barrage when absorbing heavy frontal fire behind his V-Prow Shield
   if (
-    input.shieldActive &&
+    input.hasAttackToken && input.shieldActive &&
     input.hasLos &&
     dmgBurst >= 46 &&
     input.horizDist >= 4.2 &&
@@ -52,12 +49,12 @@ export function selectBruteAction(input: BruteTacticsInput): BruteAction {
   }
 
   // 2. Same-tier lethal melee & bull-charge pressure
-  if (input.hasAttackToken && input.vertDist <= 2.5) {
+  if (input.hasAttackToken && input.hasLos && input.vertDist <= 2.5) {
     // Point-blank whirlwind punish against aggressive flankers
-    if (input.horizDist <= 4.3 && spinCd <= 0 && (input.roll < 0.42 || !input.shieldActive)) {
+    if (input.horizDist <= 3.8 && spinCd <= 0 && (input.roll < (input.enraged ? 0.6 : 0.42) || !input.shieldActive)) {
       return 'juggernaut_spin_cleave';
     }
-    if (input.horizDist <= 3.8 && input.bashCooldown <= 0) {
+    if (input.shieldActive && input.horizDist <= 3.4 && input.bashCooldown <= 0) {
       return 'ram_shield_bash';
     }
     if (input.horizDist <= 6.8 && input.slamCooldown <= 0 && input.roll < 0.68) {
@@ -137,6 +134,12 @@ export interface BruteMortarArcSolution {
   vy: number;
   vz: number;
   flightTime: number;
+}
+
+/** The hips lead the sweeping arm through one revolution, easing into a planted finish. */
+export function bruteSpinYaw(progress: number): number {
+  const p = Math.min(1, Math.max(0, progress));
+  return -0.75 + Math.PI * 2 * p * p * (3 - 2 * p);
 }
 
 /**

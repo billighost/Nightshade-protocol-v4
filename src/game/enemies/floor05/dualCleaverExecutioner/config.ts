@@ -3,7 +3,7 @@ import type { EnemyArchetypeConfig } from '../../core/types';
 export const DUAL_CLEAVER_EXECUTIONER_CONFIG: EnemyArchetypeConfig = {
   id: 'dual_cleaver_executioner',
   displayName: 'DUAL-CLEAVER EXECUTIONER',
-  roleSubtitle: 'SW REACTOR MOLTEN ARENA BUTCHER',
+  roleSubtitle: 'WARDEN OF THE REACTOR GALLOWS',
   tier: 'miniboss',
   maxHp: 880,
   moveSpeed: 4.5,
@@ -16,9 +16,9 @@ export const DUAL_CLEAVER_EXECUTIONER_CONFIG: EnemyArchetypeConfig = {
   scoreValue: 1350,
   phase2ThresholdRatio: 0.55,
   weakpointIntel:
-    'Evade the Executioner’s Guillotine Slam & Leap Crash, then puncture his blazing DORSAL SPINE FURNACE!',
+    'Dodge the falling cleavers. The iron shutters on his back open after a guillotine, leap, or whirlwind.',
   phase2Intel:
-    'OVERDRIVE: Furnace vents wide open — faster Whirlwind Cyclones and 5-bolt Molten Crescent Waves!',
+    'Furnace overdrive adds a third crossing cut and a five-bolt fan. Flank him while he pulls his blades free.',
   weakpoint: {
     id: 'spine_furnace',
     label: 'DORSAL SPINE FURNACE',
@@ -26,7 +26,7 @@ export const DUAL_CLEAVER_EXECUTIONER_CONFIG: EnemyArchetypeConfig = {
     breakThreshold: 145,
     breakBonusDamage: 140,
     staggerDuration: 2.8,
-    requiresExposedWindow: false,
+    requiresExposedWindow: true,
     repeatable: true,
     repeatCooldown: 9.0,
   },

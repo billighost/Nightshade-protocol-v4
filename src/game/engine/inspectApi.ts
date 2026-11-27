@@ -11,6 +11,10 @@ import type { CombatVfxPool } from '../effects/vfxPool';
 import type { CyberpunkOperativeRig } from '../player';
 import type { EnemyHitZone } from '../enemies/core/types';
 import type { Floor05EncounterDirector } from '../enemies/floor05';
+import { BRUTE_ATTACKS } from '../enemies/floor05/shieldChariotBrute/tactics';
+import type { ShieldChariotBruteRigHandle } from '../enemies/floor05/shieldChariotBrute/mesh';
+import { EXECUTIONER_ATTACKS } from '../enemies/floor05/dualCleaverExecutioner/tactics';
+import { EXECUTIONER_POSES, type DualCleaverExecutionerRigHandle } from '../enemies/floor05/dualCleaverExecutioner/mesh';
 import type { Floor06EncounterDirector } from '../enemies/floor06';
 import type { Floor07EncounterDirector } from '../enemies/floor07';
 import type { Floor08EncounterDirector } from '../enemies/floor08';
@@ -5246,7 +5250,28 @@ export function installNightshadeInspectApi(host: InspectApiHost): void {
       const e = host.floor05Director.manager.getEnemyById(enemyId);
       if (!e) return false;
       host.floor05Director.manager.setShowcaseLock(enemyId);
-      e.state.phase = phase;
+      const isBrute = e.config.id === 'shield_chariot_brute';
+      const isExecutioner = e.config.id === 'dual_cleaver_executioner';
+      if (!isBrute && !isExecutioner) e.state.phase = phase;
+      let executionerAir = 0;
+      if (isExecutioner) {
+        const rig = e.rig as DualCleaverExecutionerRigHandle;
+        const move = EXECUTIONER_ATTACKS[variant] ?? EXECUTIONER_ATTACKS[0];
+        const attacking = mode === 'windup' || mode === 'attack';
+        rig.setPoseMode(attacking ? EXECUTIONER_POSES[move] : 'stalk');
+        rig.setCleaverHeat(attacking ? 1.35 : phase === 2 ? 0.53 : 0.18);
+        if (move === 'berserker_leap_slam' && mode === 'attack') {
+          const t = Math.min(1, progress / 0.76);
+          executionerAir = 4 * t * (1-t) * 2.8;
+        }
+      }
+      if (isBrute) {
+        const rig = e.rig as ShieldChariotBruteRigHandle;
+        const attacking = mode === 'windup' || mode === 'attack';
+        const move = BRUTE_ATTACKS[variant] ?? BRUTE_ATTACKS[0];
+        rig.setPoseMode(attacking ? move : 'march');
+        rig.setBoosterFlame(attacking && move === 'chariot_bull_rush' ? (mode === 'attack' ? 1.35 : progress * 0.9) : 0);
+      }
       const hopliteRig = e.rig as { setPoseMode?: (m: string) => void; setSpearCharge?: (c: number) => void };
       if (e.config.id === 'plasma_spear_hoplite' && hopliteRig.setPoseMode) {
         hopliteRig.setPoseMode(mode === 'strafe' ? 'strafe' : variant === 6 && mode !== 'idle' && mode !== 'stagger' ? 'brace' : 'march');
@@ -5329,9 +5354,13 @@ export function installNightshadeInspectApi(host: InspectApiHost): void {
                   : mode === 'stagger'
                     ? 'staggered'
                     : 'dead';
-      const exposeWp = mode === 'windup' || mode === 'stagger' || phase === 2;
-      e.state.weakpoint.exposed = exposeWp;
-      e.state.weakpoint.broken = mode === 'stagger';
+      const exposeWp = isExecutioner ? mode === 'stagger' || (mode === 'attack' &&
+        ((variant === 2 && progress >= 0.76) || (variant === 4 && progress >= 0.51))) :
+        mode === 'windup' || mode === 'stagger' || phase === 2;
+      if (!isBrute && !isExecutioner) {
+        e.state.weakpoint.exposed = exposeWp;
+        e.state.weakpoint.broken = mode === 'stagger';
+      }
       const hopliteShieldOn =
         e.config.id === 'plasma_spear_hoplite' &&
         mode !== 'stagger' &&
@@ -5375,7 +5404,7 @@ export function installNightshadeInspectApi(host: InspectApiHost): void {
           airborneHeight:
             e.config.id === 'acid_wyvern_construct'
               ? 2.6
-              : hopliteVaultAir || stalkerLeapAir || netVaultAir,
+              : hopliteVaultAir || stalkerLeapAir || netVaultAir || executionerAir,
         });
       }
       e.rig.root.position.set(e.spatial.x, e.spatial.y, e.spatial.z);

@@ -57,9 +57,10 @@ export function createBruteTextures(): BruteTextureSuite {
 
   // Blood-crimson imperial siege enamel centerpiece band
   const crimGrad = pCtx.createLinearGradient(0, 72, 0, 388);
-  crimGrad.addColorStop(0, '#8a1420');
-  crimGrad.addColorStop(0.5, '#a81c28');
-  crimGrad.addColorStop(1, '#680e18');
+  crimGrad.addColorStop(0, '#82383b');
+  crimGrad.addColorStop(0.44, '#693034');
+  crimGrad.addColorStop(0.77, '#833935');
+  crimGrad.addColorStop(1, '#48282b');
   pCtx.fillStyle = crimGrad;
   pCtx.fillRect(28, 72, size - 56, 316);
 
@@ -72,12 +73,12 @@ export function createBruteTextures(): BruteTextureSuite {
   pbCtx.strokeRect(28, 72, size - 56, 316);
 
   // Bold horned war-chariot bull chevrons in hammered gold-bronze
-  pCtx.strokeStyle = '#dfa042';
-  pCtx.lineWidth = 20;
+  pCtx.strokeStyle = '#b28551';
+  pCtx.lineWidth = 11;
   pCtx.lineCap = 'square';
   pbCtx.strokeStyle = '#d4d4d4';
-  pbCtx.lineWidth = 22;
-  for (let y = 132; y <= 318; y += 64) {
+  pbCtx.lineWidth = 12;
+  for (const y of [177, 295]) {
     pCtx.beginPath();
     pCtx.moveTo(48, y + 36);
     pCtx.lineTo(256, y - 24);
@@ -92,8 +93,8 @@ export function createBruteTextures(): BruteTextureSuite {
   }
 
   // Subtle molten-orange inner warning accent line
-  pCtx.strokeStyle = '#ff6a1a';
-  pCtx.lineWidth = 5;
+  pCtx.strokeStyle = '#ac6240';
+  pCtx.lineWidth = 3;
   pCtx.beginPath();
   pCtx.moveTo(64, 366);
   pCtx.lineTo(256, 314);
@@ -105,16 +106,16 @@ export function createBruteTextures(): BruteTextureSuite {
     for (const y of [32, size - 32]) {
       pCtx.fillStyle = '#12151c';
       pCtx.beginPath();
-      pCtx.arc(x + 2, y + 2, 10, 0, Math.PI * 2);
+      pCtx.arc(x + 2, y + 2, 5.5, 0, Math.PI * 2);
       pCtx.fill();
-      pCtx.fillStyle = '#c4ccd8';
+      pCtx.fillStyle = '#9c8c79';
       pCtx.beginPath();
-      pCtx.arc(x, y, 8, 0, Math.PI * 2);
+      pCtx.arc(x, y, 4, 0, Math.PI * 2);
       pCtx.fill();
 
       pbCtx.fillStyle = '#ececec';
       pbCtx.beginPath();
-      pbCtx.arc(x, y, 9, 0, Math.PI * 2);
+      pbCtx.arc(x, y, 4.5, 0, Math.PI * 2);
       pbCtx.fill();
     }
   }
@@ -124,20 +125,34 @@ export function createBruteTextures(): BruteTextureSuite {
     const sx = ((i * 97) % 440) + 36;
     const sy = ((i * 131) % 410) + 48;
     const ang = -0.45 + (i % 5) * 0.22;
-    const len = 34 + (i % 4) * 26;
-    pCtx.strokeStyle = i % 3 === 0 ? 'rgba(225, 232, 245, 0.36)' : 'rgba(10, 12, 18, 0.55)';
-    pCtx.lineWidth = i % 3 === 0 ? 2.5 : 4.5;
+    const len = 7 + (i % 4) * 8;
+    pCtx.strokeStyle = i % 3 === 0 ? 'rgba(225, 207, 176, 0.32)' : 'rgba(26, 18, 19, 0.38)';
+    pCtx.lineWidth = i % 3 === 0 ? 1.25 : 2.1;
     pCtx.beginPath();
     pCtx.moveTo(sx, sy);
     pCtx.lineTo(sx + Math.cos(ang) * len, sy + Math.sin(ang) * len);
     pCtx.stroke();
 
-    pbCtx.strokeStyle = '#383838';
-    pbCtx.lineWidth = 3.5;
+    pbCtx.strokeStyle = '#595959';
+    pbCtx.lineWidth = 1.8;
     pbCtx.beginPath();
     pbCtx.moveTo(sx, sy);
     pbCtx.lineTo(sx + Math.cos(ang) * len, sy + Math.sin(ang) * len);
     pbCtx.stroke();
+  }
+
+  // A repeatable field of chipped enamel, concentrated around the exposed rim.
+  let seed = 0x1b5a77;
+  function grain() {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    return seed / 4294967296;
+  }
+  for (let i = 0; i < 7400; i++) {
+    const x = grain()*size, y = grain()*size;
+    const edge = Math.min(x,size-x,y,size-y);
+    const wear = edge < 48 ? 0.23 : 0.075;
+    pCtx.fillStyle = grain() < 0.58 ? 'rgba(24,18,18,0.13)' : `rgba(214,196,158,${wear})`;
+    pCtx.fillRect(x,y,1+grain()*3.7,0.7+grain()*1.75);
   }
 
   // 2. FORGED OBSIDIAN-IRON SIEGE ARMOR (Albedo + Bump + Roughness)
@@ -165,7 +180,7 @@ export function createBruteTextures(): BruteTextureSuite {
 
   // Heavy horizontal laminated siege armor plates + recessed bolts
   for (let y = 0; y < size; y += 64) {
-    const shade = 44 + ((y / 64) % 2) * 10;
+    const shade = 63 + ((y / 64) % 2) * 8;
     aCtx.fillStyle = `rgb(${shade}, ${shade + 6}, ${shade + 16})`;
     aCtx.fillRect(0, y, size, 60);
 
@@ -184,9 +199,9 @@ export function createBruteTextures(): BruteTextureSuite {
 
     // Hex-bolt studs along seam
     for (let x = 32; x < size; x += 64) {
-      aCtx.fillStyle = '#8d98ab';
+      aCtx.fillStyle = '#727a81';
       aCtx.beginPath();
-      aCtx.arc(x, y + 14, 4.5, 0, Math.PI * 2);
+      aCtx.arc(x, y + 14, 2.8, 0, Math.PI * 2);
       aCtx.fill();
       abCtx.fillStyle = '#dedede';
       abCtx.beginPath();
@@ -399,9 +414,9 @@ export function createBruteTextures(): BruteTextureSuite {
 
   const prowMap = configureTex(new THREE.CanvasTexture(prowCanvas), true, 1, 1);
   const prowBump = configureTex(new THREE.CanvasTexture(prowBumpCanvas), false, 1, 1);
-  const armorMap = configureTex(new THREE.CanvasTexture(armorCanvas), true, 2, 2);
-  const armorBump = configureTex(new THREE.CanvasTexture(armorBumpCanvas), false, 2, 2);
-  const armorRoughness = configureTex(new THREE.CanvasTexture(armorRoughCanvas), false, 2, 2);
+  const armorMap = configureTex(new THREE.CanvasTexture(armorCanvas), true);
+  const armorBump = configureTex(new THREE.CanvasTexture(armorBumpCanvas), false);
+  const armorRoughness = configureTex(new THREE.CanvasTexture(armorRoughCanvas), false);
   const crimsonMap = configureTex(new THREE.CanvasTexture(crimsonCanvas), true, 1, 1);
   const bronzeMap = configureTex(new THREE.CanvasTexture(bronzeCanvas), true, 1, 1);
   const bronzeBump = configureTex(new THREE.CanvasTexture(bronzeBumpCanvas), false, 1, 1);
